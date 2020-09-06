@@ -37,7 +37,7 @@ class _MyAppState extends State<MyApp> {
 
     final material = ARKitMaterial(
       lightingModelName: ARKitLightingModel.lambert,
-      diffuse: ARKitMaterialProperty(image: 'images/eye.png'),
+      diffuse: ARKitMaterialProperty(image: 'images/earth1.jpg'),
     );
     final sphere = ARKitSphere(
       materials: [material],
@@ -51,10 +51,10 @@ class _MyAppState extends State<MyApp> {
     );
     this.arkitController.add(node);
 
-    // timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
-    //   final rotation = node.eulerAngles;
-    //   rotation.x += 0.01;s
-    //   node.eulerAngles = rotation;
-    // });
+    timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
+      final rotation = node.eulerAngles.value;
+      rotation.x += 0.01;
+      node.eulerAngles.value = rotation;
+    });
   }
 }
