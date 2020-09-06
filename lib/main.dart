@@ -51,9 +51,9 @@ class _MyAppState extends State<MyApp> {
     );
     this.arkitController.add(node);
 
-    timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
-      final rotation = node.eulerAngles.value;
-      rotation.x += 0.01;
+    timer = Timer.periodic(Duration(milliseconds: 50), (timer) {
+      final old = node.eulerAngles.value;
+      final rotation = Vector3(old.x, old.y + 0.1, old.z);
       node.eulerAngles.value = rotation;
     });
   }
