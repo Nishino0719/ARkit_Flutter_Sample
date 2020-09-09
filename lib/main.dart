@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
     }
     node = ARKitReferenceNode(
       url: 'models.scnassets/eevee.DAE',
-      scale: vector.Vector3.all(0.01),
+      scale: vector.Vector3.all(0.005),
     );
     controller.add(node, parentNodeName: anchor.nodeName);
   }
