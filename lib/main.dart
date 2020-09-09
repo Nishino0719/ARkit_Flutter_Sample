@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:arkit_plugin/arkit_plugin.dart';
-import 'package:vector_math/vector_math_64.dart';
+import 'package:flutter/material.dart';
+import 'package:vector_math/vector_math_64.dart' as vector;
 
 void main() => runApp(MaterialApp(home: MyApp()));
 
@@ -11,6 +11,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   ARKitController arkitController;
+  ARKitReferenceNode node;
+  String anchorId;
 
   @override
   void dispose() {
@@ -20,13 +22,36 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-      appBar: AppBar(title: const Text('ARKit in Flutter')),
-      body: ARKitSceneView(onARKitViewCreated: onARKitViewCreated));
+    appBar: AppBar(title: const Text('Custom object on plane Sample')),
+    body: Container(
+      child: ARKitSceneView(
+        showFeaturePoints: true,
+        planeDetection: ARPlaneDetection.horizontal,
+        onARKitViewCreated: onARKitViewCreated,
+      ),
+    ),
+  );
 
   void onARKitViewCreated(ARKitController arkitController) {
     this.arkitController = arkitController;
-    final node = ARKitNode(
-        geometry: ARKitSphere(radius: 0.1), position: Vector3(0, 0, -0.5));
-    this.arkitController.add(node);
+    this.arkitController.onAddNodeForAnchor = _handleAddAnchor;
+  }
+
+  void _handleAddAnchor(ARKitAnchor anchor) {
+    if (anchor is ARKitPlaneAnchor) {
+      _addPlane(arkitController, anchor);
+    }
+  }
+
+  void _addPlane(ARKitController controller, ARKitPlaneAnchor anchor) {
+    anchorId = anchor.identifier;
+    if (node != null) {
+      controller.remove(node.name);
+    }
+    node = ARKitReferenceNode(
+      url: 'models.scnassets/eevee.DAE',
+      scale: vector.Vector3.all(0.01),
+    );
+    controller.add(node, parentNodeName: anchor.nodeName);
   }
 }
